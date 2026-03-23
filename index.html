@@ -5,195 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>POS Lavanderia 3logiS</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            overflow: hidden;
-        }
-
-        .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
-
-        .header h1 {
-            font-size: 24px;
-            margin-bottom: 5px;
-        }
-
-        .header p {
-            font-size: 12px;
-            opacity: 0.9;
-        }
-
-        .content {
-            padding: 30px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: #333;
-            font-weight: 500;
-        }
-
-        input, select {
-            width: 100%;
-            padding: 10px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 14px;
-            transition: border-color 0.3s;
-        }
-
-        input:focus, select:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
-        .articoli {
-            margin: 20px 0;
-        }
-
-        .articolo-item {
-            background: #f8f9fa;
-            padding: 15px;
-            margin-bottom: 10px;
-            border-radius: 8px;
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .articolo-item input {
-            flex: 1;
-            min-width: 100px;
-        }
-
-        .articolo-item .qta {
-            width: 80px;
-        }
-
-        .articolo-item .prezzo {
-            width: 100px;
-        }
-
-        .btn-rimuovi {
-            background: #dc3545;
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 12px;
-        }
-
-        .btn-rimuovi:hover {
-            background: #c82333;
-        }
-
-        button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 600;
-            margin-right: 10px;
-            transition: transform 0.2s;
-        }
-
-        button:hover {
-            transform: translateY(-2px);
-        }
-
-        button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .btn-secondario {
-            background: #6c757d;
-        }
-
-        .totale {
-            margin-top: 20px;
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            text-align: right;
-            font-size: 24px;
-            font-weight: bold;
-            color: #667eea;
-        }
-
-        .status {
-            margin-top: 20px;
-            padding: 10px;
-            border-radius: 8px;
-            text-align: center;
-            font-size: 14px;
-        }
-
-        .status.success {
-            background: #d4edda;
-            color: #155724;
-        }
-
-        .status.error {
-            background: #f8d7da;
-            color: #721c24;
-        }
-
-        .status.info {
-            background: #d1ecf1;
-            color: #0c5460;
-        }
-
-        .status.warning {
-            background: #fff3cd;
-            color: #856404;
-        }
-
-        @media (max-width: 768px) {
-            .content {
-                padding: 20px;
-            }
-            
-            .articolo-item {
-                flex-direction: column;
-            }
-            
-            .articolo-item input {
-                width: 100%;
-            }
-        }
+        /* stesso CSS di prima */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; background: white; border-radius: 15px; overflow: hidden; }
+        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; text-align: center; }
+        .content { padding: 30px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; color: #333; font-weight: 500; }
+        input { width: 100%; padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px; }
+        .articoli { margin: 20px 0; }
+        .articolo-item { background: #f8f9fa; padding: 15px; margin-bottom: 10px; border-radius: 8px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+        button { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-size: 16px; margin-right: 10px; }
+        .totale { margin-top: 20px; padding: 20px; background: #f8f9fa; border-radius: 8px; text-align: right; font-size: 24px; font-weight: bold; color: #667eea; }
+        .status { margin-top: 20px; padding: 10px; border-radius: 8px; text-align: center; }
+        .status.success { background: #d4edda; color: #155724; }
+        .status.error { background: #f8d7da; color: #721c24; }
+        .status.info { background: #d1ecf1; color: #0c5460; }
     </style>
 </head>
 <body>
@@ -202,302 +30,151 @@
             <h1>🏪 POS Lavanderia 3logiS</h1>
             <p>Sistema di Punto Vendita per Lavanderie</p>
         </div>
-        
         <div class="content">
             <div class="form-group">
                 <label>📋 Numero Ticket</label>
                 <input type="text" id="ticket" placeholder="es: 2024-001" value="LAV-001">
             </div>
-            
             <div class="form-group">
                 <label>👤 Nome Cliente</label>
                 <input type="text" id="cliente" placeholder="Nome e Cognome" value="Mario Rossi">
             </div>
-            
             <div class="form-group">
                 <label>➕ Aggiungi Articolo</label>
                 <div style="display: flex; gap: 10px; flex-wrap: wrap;">
                     <input type="text" id="nuovo-articolo" placeholder="Descrizione" style="flex: 2;">
                     <input type="number" id="nuovo-qta" placeholder="Q.tà" value="1" style="width: 80px;">
                     <input type="number" id="nuovo-prezzo" placeholder="Prezzo" step="0.01" value="10.00" style="width: 100px;">
-                    <button onclick="aggiungiArticolo()" style="padding: 10px 20px;">➕ Aggiungi</button>
+                    <button onclick="aggiungiArticolo()">➕ Aggiungi</button>
                 </div>
             </div>
-            
             <div class="articoli">
                 <h3>📦 Articoli in Scontrino</h3>
                 <div id="lista-articoli"></div>
             </div>
-            
             <div class="totale">
                 Totale: € <span id="totale">0.00</span>
             </div>
-            
-            <div style="margin-top: 20px;">
-                <button id="btnStampa" onclick="stampaScontrino()">🖨️ Stampa Scontrino</button>
-                <button onclick="svuotaScontrino()" class="btn-secondario">🗑️ Svuota</button>
-                <button onclick="aggiungiEsempio()" class="btn-secondario">📝 Esempio</button>
+            <div>
+                <button onclick="stampaScontrino()">🖨️ Stampa Scontrino</button>
+                <button onclick="svuotaScontrino()">🗑️ Svuota</button>
+                <button onclick="aggiungiEsempio()">📝 Esempio</button>
             </div>
-            
             <div id="status" class="status"></div>
         </div>
     </div>
 
     <script>
         let articoli = [];
-        let isWebView2Ready = false;
 
-        // Funzione per inviare i dati a Delphi
-        function inviaADelphi(dati) {
-            // Metodo corretto per WebView2
-            if (window.chrome && window.chrome.webview) {
-                try {
-                    window.chrome.webview.postMessage(JSON.stringify(dati));
-                    return true;
-                } catch (e) {
-                    console.error('Errore invio a Delphi:', e);
-                    return false;
-                }
-            }
-            // Fallback: prova con window.external (alternativa)
-            else if (window.external && window.external.postMessage) {
-                try {
-                    window.external.postMessage(JSON.stringify(dati));
-                    return true;
-                } catch (e) {
-                    console.error('Errore invio a external:', e);
-                    return false;
-                }
-            }
-            else {
-                console.warn('Nessun metodo di comunicazione disponibile');
-                return false;
-            }
+        function mostraStatus(msg, tipo) {
+            const statusDiv = document.getElementById('status');
+            statusDiv.textContent = msg;
+            statusDiv.className = `status ${tipo}`;
+            setTimeout(() => { statusDiv.className = 'status'; }, 3000);
         }
 
-        // Funzione per verificare periodicamente se WebView2 è disponibile
-        function checkWebView2Availability() {
-            if (window.chrome && window.chrome.webview) {
-                if (!isWebView2Ready) {
-                    isWebView2Ready = true;
-                    mostraStatus('✅ Connesso a Delphi - Pronto per la stampa', 'success');
-                    document.getElementById('btnStampa').disabled = false;
-                    
-                    // Notifica Delphi che siamo pronti
-                    try {
-                        window.chrome.webview.postMessage(JSON.stringify({ event: 'ready', url: window.location.href }));
-                    } catch(e) {
-                        console.log('Ready event non inviato');
-                    }
-                }
-                return true;
+        // Funzione che usa il bridge iniettato da Delphi
+        function stampaConDelphi(dati) {
+            if (window.DelphiBridge && window.DelphiBridge.stampa) {
+                return window.DelphiBridge.stampa(dati);
+            } else {
+                console.log('Bridge non disponibile, attendo...');
+                return false;
             }
-            return false;
         }
 
         function aggiornaLista() {
             const listaDiv = document.getElementById('lista-articoli');
             const totaleSpan = document.getElementById('totale');
-            
             if (articoli.length === 0) {
                 listaDiv.innerHTML = '<p style="text-align: center; color: #999;">Nessun articolo aggiunto</p>';
                 totaleSpan.innerText = '0.00';
                 return;
             }
-            
-            let html = '';
-            let totale = 0;
-            
-            articoli.forEach((articolo, index) => {
-                const subtotale = articolo.qta * articolo.prezzo;
+            let html = '', totale = 0;
+            articoli.forEach((art, idx) => {
+                const subtotale = art.qta * art.prezzo;
                 totale += subtotale;
-                
-                html += `
-                    <div class="articolo-item">
-                        <span style="font-weight: bold; width: 30px;">${index + 1}.</span>
-                        <input type="text" value="${escapeHtml(articolo.desc)}" onchange="modificaArticolo(${index}, 'desc', this.value)" style="flex: 2;">
-                        <input type="number" value="${articolo.qta}" onchange="modificaArticolo(${index}, 'qta', parseInt(this.value))" class="qta">
-                        <input type="number" value="${articolo.prezzo}" step="0.01" onchange="modificaArticolo(${index}, 'prezzo', parseFloat(this.value))" class="prezzo">
-                        <span style="width: 80px; text-align: right;">€ ${subtotale.toFixed(2)}</span>
-                        <button class="btn-rimuovi" onclick="rimuoviArticolo(${index})">✖</button>
-                    </div>
-                `;
+                html += `<div class="articolo-item">
+                    <span>${idx+1}.</span>
+                    <input value="${art.desc}" onchange="modificaArticolo(${idx}, 'desc', this.value)" style="flex:2">
+                    <input type="number" value="${art.qta}" onchange="modificaArticolo(${idx}, 'qta', parseInt(this.value))" style="width:80px">
+                    <input type="number" value="${art.prezzo}" step="0.01" onchange="modificaArticolo(${idx}, 'prezzo', parseFloat(this.value))" style="width:100px">
+                    <span>€ ${subtotale.toFixed(2)}</span>
+                    <button onclick="rimuoviArticolo(${idx})" style="background:#dc3545;padding:5px 10px">✖</button>
+                </div>`;
             });
-            
             listaDiv.innerHTML = html;
             totaleSpan.innerText = totale.toFixed(2);
         }
-        
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-        
+
         function aggiungiArticolo() {
             const desc = document.getElementById('nuovo-articolo').value;
             const qta = parseInt(document.getElementById('nuovo-qta').value);
             const prezzo = parseFloat(document.getElementById('nuovo-prezzo').value);
-            
-            if (!desc) {
-                mostraStatus('Inserisci una descrizione', 'error');
-                return;
-            }
-            
-            if (isNaN(qta) || qta <= 0) {
-                mostraStatus('Inserisci una quantità valida', 'error');
-                return;
-            }
-            
-            if (isNaN(prezzo) || prezzo <= 0) {
-                mostraStatus('Inserisci un prezzo valido', 'error');
-                return;
-            }
-            
-            articoli.push({
-                desc: desc,
-                qta: qta,
-                prezzo: prezzo
-            });
-            
+            if (!desc) { mostraStatus('Inserisci descrizione', 'error'); return; }
+            articoli.push({ desc, qta, prezzo });
             document.getElementById('nuovo-articolo').value = '';
             document.getElementById('nuovo-qta').value = '1';
             document.getElementById('nuovo-prezzo').value = '10.00';
-            
             aggiornaLista();
             mostraStatus('Articolo aggiunto', 'success');
         }
-        
-        function modificaArticolo(index, campo, valore) {
-            if (campo === 'qta') {
-                valore = parseInt(valore);
-                if (isNaN(valore) || valore <= 0) valore = 1;
-            }
-            if (campo === 'prezzo') {
-                valore = parseFloat(valore);
-                if (isNaN(valore) || valore <= 0) valore = 0;
-            }
-            articoli[index][campo] = valore;
-            aggiornaLista();
-        }
-        
-        function rimuoviArticolo(index) {
-            articoli.splice(index, 1);
-            aggiornaLista();
-            mostraStatus('Articolo rimosso', 'success');
-        }
-        
-        function svuotaScontrino() {
-            articoli = [];
-            aggiornaLista();
-            mostraStatus('Scontrino svuotato', 'success');
-        }
-        
+
+        function modificaArticolo(idx, campo, val) { articoli[idx][campo] = val; aggiornaLista(); }
+        function rimuoviArticolo(idx) { articoli.splice(idx, 1); aggiornaLista(); mostraStatus('Articolo rimosso', 'success'); }
+        function svuotaScontrino() { articoli = []; aggiornaLista(); mostraStatus('Scontrino svuotato', 'success'); }
         function aggiungiEsempio() {
             articoli = [
-                { desc: 'Lavaggio Camicie (3 pezzi)', qta: 1, prezzo: 12.00 },
-                { desc: 'Stiro Pantaloni', qta: 2, prezzo: 5.00 },
-                { desc: 'Lavaggio a Secco Giacca', qta: 1, prezzo: 15.00 },
-                { desc: 'Ammorbidente', qta: 1, prezzo: 2.50 }
+                { desc: 'Lavaggio Camicie', qta: 2, prezzo: 8.50 },
+                { desc: 'Stiro Pantaloni', qta: 1, prezzo: 5.00 },
+                { desc: 'Lavaggio a Secco', qta: 1, prezzo: 15.00 }
             ];
             aggiornaLista();
             mostraStatus('Esempio caricato', 'success');
         }
-        
-        function mostraStatus(msg, tipo) {
-            const statusDiv = document.getElementById('status');
-            statusDiv.textContent = msg;
-            statusDiv.className = `status ${tipo}`;
-            setTimeout(() => {
-                if (statusDiv.className === `status ${tipo}`) {
-                    statusDiv.className = 'status';
-                }
-            }, 5000);
-        }
-        
+
         function stampaScontrino() {
-            if (articoli.length === 0) {
-                mostraStatus('Aggiungi almeno un articolo', 'error');
-                return;
-            }
-            
+            if (articoli.length === 0) { mostraStatus('Aggiungi almeno un articolo', 'error'); return; }
             const ticket = document.getElementById('ticket').value;
             const cliente = document.getElementById('cliente').value;
+            if (!ticket || !cliente) { mostraStatus('Compila tutti i campi', 'error'); return; }
             
-            if (!ticket || !cliente) {
-                mostraStatus('Compila tutti i campi', 'error');
-                return;
-            }
+            const dati = { ticket, cliente, articoli };
             
-            const dati = {
-                ticket: ticket,
-                cliente: cliente,
-                articoli: articoli
-            };
-            
-            mostraStatus('📤 Invio dati a Delphi...', 'info');
-            
-            // Verifica se WebView2 è disponibile prima di inviare
-            if (!checkWebView2Availability()) {
-                mostraStatus('⏳ Attesa connessione con Delphi... Riprova tra qualche secondo', 'warning');
-                // Prova di nuovo dopo 2 secondi
-                setTimeout(() => {
-                    if (checkWebView2Availability()) {
-                        const inviato = inviaADelphi(dati);
-                        if (inviato) {
-                            mostraStatus('✅ Scontrino inviato alla stampante!', 'success');
-                        } else {
-                            mostraStatus('❌ Errore durante l\'invio a Delphi', 'error');
-                        }
-                    } else {
-                        mostraStatus('❌ Connessione con Delphi non disponibile. Verificare che l\'app sia avviata.', 'error');
-                    }
-                }, 2000);
-                return;
-            }
-            
-            // Invia i dati a Delphi
-            const inviato = inviaADelphi(dati);
-            
-            if (inviato) {
-                mostraStatus('✅ Scontrino inviato alla stampante!', 'success');
+            if (stampaConDelphi(dati)) {
+                mostraStatus('✅ Scontrino inviato!', 'success');
             } else {
-                mostraStatus('❌ Errore durante l\'invio a Delphi', 'error');
+                mostraStatus('⏳ Connessione con Delphi...', 'info');
+                // Riprova dopo 1 secondo
+                setTimeout(() => {
+                    if (stampaConDelphi(dati)) {
+                        mostraStatus('✅ Scontrino inviato!', 'success');
+                    } else {
+                        mostraStatus('❌ Delphi non connesso. Riavviare l\'applicazione.', 'error');
+                    }
+                }, 1000);
             }
         }
-        
-        // Verifica la disponibilità di WebView2 ogni secondo
-        let checkInterval = setInterval(() => {
-            if (checkWebView2Availability()) {
-                clearInterval(checkInterval);
+
+        // Verifica presenza del bridge
+        function checkBridge() {
+            if (window.DelphiBridge) {
+                mostraStatus('✅ Connesso a Delphi!', 'success');
+                return true;
             }
+            return false;
+        }
+
+        // Controlla ogni secondo se il bridge è disponibile
+        let checkInterval = setInterval(() => {
+            if (checkBridge()) clearInterval(checkInterval);
         }, 1000);
         
-        // Rileva se siamo in WebView2 all'avvio
         window.addEventListener('DOMContentLoaded', () => {
-            // Disabilita il pulsante inizialmente
-            document.getElementById('btnStampa').disabled = true;
-            
-            // Prova immediata
-            if (checkWebView2Availability()) {
-                clearInterval(checkInterval);
-            } else {
-                mostraStatus('⏳ Connessione a Delphi in corso...', 'info');
-            }
-        });
-        
-        // Aggiungi listener per messaggi da Delphi (opzionale)
-        window.addEventListener('message', function(event) {
-            if (event.data && typeof event.data === 'string') {
-                try {
-                    const data = JSON.parse(event.data);
-                    if (data.status) {
-                        mostraStatus(data.status, data.type || 'info');
-                    }
-                } catch(e) {
-                    console.log('Messaggio da Delphi:', event.data);
-                }
-            }
+            mostraStatus('⏳ Connessione a Delphi in corso...', 'info');
+            checkBridge();
         });
     </script>
 </body>
