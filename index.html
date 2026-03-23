@@ -1,362 +1,450 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="it">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>POS Lavanderia 3logiS</title>
     <style>
-      /* stesso CSS di prima */
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-      body {
-        font-family: "Segoe UI", sans-serif;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        min-height: 100vh;
-        padding: 20px;
-      }
-      .container {
-        max-width: 800px;
-        margin: 0 auto;
-        background: white;
-        border-radius: 15px;
-        overflow: hidden;
-      }
-      .header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        padding: 20px;
-        text-align: center;
-      }
-      .content {
-        padding: 30px;
-      }
-      .form-group {
-        margin-bottom: 20px;
-      }
-      label {
-        display: block;
-        margin-bottom: 8px;
-        color: #333;
-        font-weight: 500;
-      }
-      input {
-        width: 100%;
-        padding: 10px;
-        border: 2px solid #e0e0e0;
-        border-radius: 8px;
-      }
-      .articoli {
-        margin: 20px 0;
-      }
-      .articolo-item {
-        background: #f8f9fa;
-        padding: 15px;
-        margin-bottom: 10px;
-        border-radius: 8px;
-        display: flex;
-        gap: 10px;
-        align-items: center;
-        flex-wrap: wrap;
-      }
-      button {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        border: none;
-        padding: 12px 24px;
-        border-radius: 8px;
-        cursor: pointer;
-        font-size: 16px;
-        margin-right: 10px;
-      }
-      .totale {
-        margin-top: 20px;
-        padding: 20px;
-        background: #f8f9fa;
-        border-radius: 8px;
-        text-align: right;
-        font-size: 24px;
-        font-weight: bold;
-        color: #667eea;
-      }
-      .status {
-        margin-top: 20px;
-        padding: 10px;
-        border-radius: 8px;
-        text-align: center;
-      }
-      .status.success {
-        background: #d4edda;
-        color: #155724;
-      }
-      .status.error {
-        background: #f8d7da;
-        color: #721c24;
-      }
-      .status.info {
-        background: #d1ecf1;
-        color: #0c5460;
-      }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .articoli {
+            margin: 20px 0;
+        }
+
+        .articolo-item {
+            background: #f8f9fa;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .articolo-item input {
+            flex: 1;
+            min-width: 100px;
+        }
+
+        .articolo-item .qta {
+            width: 80px;
+        }
+
+        .articolo-item .prezzo {
+            width: 100px;
+        }
+
+        .btn-rimuovi {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .btn-rimuovi:hover {
+            background: #c82333;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            margin-right: 10px;
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-secondario {
+            background: #6c757d;
+        }
+
+        .totale {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            text-align: right;
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .status {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .status.warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                padding: 20px;
+            }
+            
+            .articolo-item {
+                flex-direction: column;
+            }
+            
+            .articolo-item input {
+                width: 100%;
+            }
+        }
     </style>
-
-    <script>
-      // Debug: mostra quando il DOM è caricato
-      window.addEventListener("DOMContentLoaded", () => {
-        console.log("DOM caricato");
-        const statusDiv = document.getElementById("status");
-        if (statusDiv) {
-          statusDiv.innerHTML =
-            '<div class="status info">⏳ Attesa connessione Delphi...</div>';
-        }
-      });
-
-      // Funzione che verrà chiamata da Delphi quando inietta il bridge
-      window.delphiBridgeReady = function () {
-        console.log("✅ Bridge ricevuto da Delphi!");
-        const statusDiv = document.getElementById("status");
-        if (statusDiv) {
-          statusDiv.innerHTML =
-            '<div class="status success">✅ Connesso a Delphi - Pronto per la stampa</div>';
-        }
-      };
-
-      // Timer che controlla ogni secondo se il bridge è stato iniettato
-      let checkCount = 0;
-      const checkInterval = setInterval(() => {
-        checkCount++;
-        console.log(`Controllo bridge #${checkCount}:`, !!window.DelphiBridge);
-
-        if (window.DelphiBridge) {
-          console.log("✅ Bridge trovato!");
-          clearInterval(checkInterval);
-          const statusDiv = document.getElementById("status");
-          if (statusDiv) {
-            statusDiv.innerHTML =
-              '<div class="status success">✅ Connesso a Delphi - Pronto per la stampa</div>';
-          }
-          // Notifica Delphi che siamo pronti
-          window.DelphiBridge.pronto();
-        } else if (checkCount > 30) {
-          console.log("❌ Bridge non trovato dopo 30 secondi");
-          clearInterval(checkInterval);
-          const statusDiv = document.getElementById("status");
-          if (statusDiv) {
-            statusDiv.innerHTML =
-              '<div class="status error">❌ Delphi non connesso. Riavviare l\'applicazione.</div>';
-          }
-        }
-      }, 1000);
-    </script>
-  </head>
-  <body>
+</head>
+<body>
     <div class="container">
-      <div class="header">
-        <h1>🏪 POS Lavanderia 3logiS</h1>
-        <p>Sistema di Punto Vendita per Lavanderie</p>
-      </div>
-      <div class="content">
-        <div class="form-group">
-          <label>📋 Numero Ticket</label>
-          <input
-            type="text"
-            id="ticket"
-            placeholder="es: 2024-001"
-            value="LAV-001"
-          />
+        <div class="header">
+            <h1>🏪 POS Lavanderia 3logiS</h1>
+            <p>Sistema di Punto Vendita per Lavanderie</p>
         </div>
-        <div class="form-group">
-          <label>👤 Nome Cliente</label>
-          <input
-            type="text"
-            id="cliente"
-            placeholder="Nome e Cognome"
-            value="Mario Rossi"
-          />
+        
+        <div class="content">
+            <div class="form-group">
+                <label>📋 Numero Ticket</label>
+                <input type="text" id="ticket" placeholder="es: 2024-001" value="LAV-001">
+            </div>
+            
+            <div class="form-group">
+                <label>👤 Nome Cliente</label>
+                <input type="text" id="cliente" placeholder="Nome e Cognome" value="Mario Rossi">
+            </div>
+            
+            <div class="form-group">
+                <label>➕ Aggiungi Articolo</label>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <input type="text" id="nuovo-articolo" placeholder="Descrizione" style="flex: 2;">
+                    <input type="number" id="nuovo-qta" placeholder="Q.tà" value="1" style="width: 80px;">
+                    <input type="number" id="nuovo-prezzo" placeholder="Prezzo" step="0.01" value="10.00" style="width: 100px;">
+                    <button onclick="aggiungiArticolo()" style="padding: 10px 20px;">➕ Aggiungi</button>
+                </div>
+            </div>
+            
+            <div class="articoli">
+                <h3>📦 Articoli in Scontrino</h3>
+                <div id="lista-articoli"></div>
+            </div>
+            
+            <div class="totale">
+                Totale: € <span id="totale">0.00</span>
+            </div>
+            
+            <div style="margin-top: 20px;">
+                <button id="btnStampa" onclick="stampaScontrino()">🖨️ Stampa Scontrino</button>
+                <button onclick="svuotaScontrino()" class="btn-secondario">🗑️ Svuota</button>
+                <button onclick="aggiungiEsempio()" class="btn-secondario">📝 Esempio</button>
+            </div>
+            
+            <div id="status" class="status"></div>
         </div>
-        <div class="form-group">
-          <label>➕ Aggiungi Articolo</label>
-          <div style="display: flex; gap: 10px; flex-wrap: wrap">
-            <input
-              type="text"
-              id="nuovo-articolo"
-              placeholder="Descrizione"
-              style="flex: 2"
-            />
-            <input
-              type="number"
-              id="nuovo-qta"
-              placeholder="Q.tà"
-              value="1"
-              style="width: 80px"
-            />
-            <input
-              type="number"
-              id="nuovo-prezzo"
-              placeholder="Prezzo"
-              step="0.01"
-              value="10.00"
-              style="width: 100px"
-            />
-            <button onclick="aggiungiArticolo()">➕ Aggiungi</button>
-          </div>
-        </div>
-        <div class="articoli">
-          <h3>📦 Articoli in Scontrino</h3>
-          <div id="lista-articoli"></div>
-        </div>
-        <div class="totale">Totale: € <span id="totale">0.00</span></div>
-        <div>
-          <button onclick="stampaScontrino()">🖨️ Stampa Scontrino</button>
-          <button onclick="svuotaScontrino()">🗑️ Svuota</button>
-          <button onclick="aggiungiEsempio()">📝 Esempio</button>
-        </div>
-        <div id="status" class="status"></div>
-      </div>
     </div>
 
     <script>
-      let articoli = [];
+        let articoli = [];
+        let checkInterval = null;
+        let isBridgeReady = false;
 
-      function mostraStatus(msg, tipo) {
-        const statusDiv = document.getElementById("status");
-        statusDiv.textContent = msg;
-        statusDiv.className = `status ${tipo}`;
-        setTimeout(() => {
-          statusDiv.className = "status";
-        }, 3000);
-      }
-
-      // Funzione che usa il bridge iniettato da Delphi
-      function stampaConDelphi(dati) {
-        if (window.DelphiBridge && window.DelphiBridge.stampa) {
-          return window.DelphiBridge.stampa(dati);
-        } else {
-          console.log("Bridge non disponibile, attendo...");
-          return false;
-        }
-      }
-
-      function aggiornaLista() {
-        const listaDiv = document.getElementById("lista-articoli");
-        const totaleSpan = document.getElementById("totale");
-        if (articoli.length === 0) {
-          listaDiv.innerHTML =
-            '<p style="text-align: center; color: #999;">Nessun articolo aggiunto</p>';
-          totaleSpan.innerText = "0.00";
-          return;
-        }
-        let html = "",
-          totale = 0;
-        articoli.forEach((art, idx) => {
-          const subtotale = art.qta * art.prezzo;
-          totale += subtotale;
-          html += `<div class="articolo-item">
-                    <span>${idx + 1}.</span>
-                    <input value="${art.desc}" onchange="modificaArticolo(${idx}, 'desc', this.value)" style="flex:2">
-                    <input type="number" value="${art.qta}" onchange="modificaArticolo(${idx}, 'qta', parseInt(this.value))" style="width:80px">
-                    <input type="number" value="${art.prezzo}" step="0.01" onchange="modificaArticolo(${idx}, 'prezzo', parseFloat(this.value))" style="width:100px">
-                    <span>€ ${subtotale.toFixed(2)}</span>
-                    <button onclick="rimuoviArticolo(${idx})" style="background:#dc3545;padding:5px 10px">✖</button>
-                </div>`;
-        });
-        listaDiv.innerHTML = html;
-        totaleSpan.innerText = totale.toFixed(2);
-      }
-
-      function aggiungiArticolo() {
-        const desc = document.getElementById("nuovo-articolo").value;
-        const qta = parseInt(document.getElementById("nuovo-qta").value);
-        const prezzo = parseFloat(
-          document.getElementById("nuovo-prezzo").value,
-        );
-        if (!desc) {
-          mostraStatus("Inserisci descrizione", "error");
-          return;
-        }
-        articoli.push({ desc, qta, prezzo });
-        document.getElementById("nuovo-articolo").value = "";
-        document.getElementById("nuovo-qta").value = "1";
-        document.getElementById("nuovo-prezzo").value = "10.00";
-        aggiornaLista();
-        mostraStatus("Articolo aggiunto", "success");
-      }
-
-      function modificaArticolo(idx, campo, val) {
-        articoli[idx][campo] = val;
-        aggiornaLista();
-      }
-      function rimuoviArticolo(idx) {
-        articoli.splice(idx, 1);
-        aggiornaLista();
-        mostraStatus("Articolo rimosso", "success");
-      }
-      function svuotaScontrino() {
-        articoli = [];
-        aggiornaLista();
-        mostraStatus("Scontrino svuotato", "success");
-      }
-      function aggiungiEsempio() {
-        articoli = [
-          { desc: "Lavaggio Camicie", qta: 2, prezzo: 8.5 },
-          { desc: "Stiro Pantaloni", qta: 1, prezzo: 5.0 },
-          { desc: "Lavaggio a Secco", qta: 1, prezzo: 15.0 },
-        ];
-        aggiornaLista();
-        mostraStatus("Esempio caricato", "success");
-      }
-
-      function stampaScontrino() {
-        if (articoli.length === 0) {
-          mostraStatus("Aggiungi almeno un articolo", "error");
-          return;
-        }
-        const ticket = document.getElementById("ticket").value;
-        const cliente = document.getElementById("cliente").value;
-        if (!ticket || !cliente) {
-          mostraStatus("Compila tutti i campi", "error");
-          return;
-        }
-
-        const dati = { ticket, cliente, articoli };
-
-        if (stampaConDelphi(dati)) {
-          mostraStatus("✅ Scontrino inviato!", "success");
-        } else {
-          mostraStatus("⏳ Connessione con Delphi...", "info");
-          // Riprova dopo 1 secondo
-          setTimeout(() => {
-            if (stampaConDelphi(dati)) {
-              mostraStatus("✅ Scontrino inviato!", "success");
-            } else {
-              mostraStatus(
-                "❌ Delphi non connesso. Riavviare l'applicazione.",
-                "error",
-              );
+        function mostraStatus(msg, tipo) {
+            const statusDiv = document.getElementById('status');
+            if (statusDiv) {
+                statusDiv.textContent = msg;
+                statusDiv.className = `status ${tipo}`;
+                setTimeout(() => {
+                    if (statusDiv.className === `status ${tipo}`) {
+                        statusDiv.className = 'status';
+                    }
+                }, 5000);
             }
-          }, 1000);
         }
-      }
 
-      // Verifica presenza del bridge
-      function checkBridge() {
-        if (window.DelphiBridge) {
-          mostraStatus("✅ Connesso a Delphi!", "success");
-          return true;
+        function inviaADelphi(dati) {
+            if (window.DelphiBridge && window.DelphiBridge.stampa) {
+                return window.DelphiBridge.stampa(dati);
+            }
+            return false;
         }
-        return false;
-      }
 
-      // Controlla ogni secondo se il bridge è disponibile
-      let checkInterval = setInterval(() => {
-        if (checkBridge()) clearInterval(checkInterval);
-      }, 1000);
-
-      window.addEventListener("DOMContentLoaded", () => {
-        mostraStatus("⏳ Connessione a Delphi in corso...", "info");
-        checkBridge();
-      });
+        function aggiornaLista() {
+            const listaDiv = document.getElementById('lista-articoli');
+            const totaleSpan = document.getElementById('totale');
+            
+            if (articoli.length === 0) {
+                listaDiv.innerHTML = '<p style="text-align: center; color: #999;">Nessun articolo aggiunto</p>';
+                totaleSpan.innerText = '0.00';
+                return;
+            }
+            
+            let html = '';
+            let totale = 0;
+            
+            articoli.forEach((articolo, index) => {
+                const subtotale = articolo.qta * articolo.prezzo;
+                totale += subtotale;
+                
+                html += `
+                    <div class="articolo-item">
+                        <span style="font-weight: bold; width: 30px;">${index + 1}.</span>
+                        <input type="text" value="${escapeHtml(articolo.desc)}" onchange="modificaArticolo(${index}, 'desc', this.value)" style="flex: 2;">
+                        <input type="number" value="${articolo.qta}" onchange="modificaArticolo(${index}, 'qta', parseInt(this.value))" class="qta">
+                        <input type="number" value="${articolo.prezzo}" step="0.01" onchange="modificaArticolo(${index}, 'prezzo', parseFloat(this.value))" class="prezzo">
+                        <span style="width: 80px; text-align: right;">€ ${subtotale.toFixed(2)}</span>
+                        <button class="btn-rimuovi" onclick="rimuoviArticolo(${index})">✖</button>
+                    </div>
+                `;
+            });
+            
+            listaDiv.innerHTML = html;
+            totaleSpan.innerText = totale.toFixed(2);
+        }
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        function aggiungiArticolo() {
+            const desc = document.getElementById('nuovo-articolo').value;
+            const qta = parseInt(document.getElementById('nuovo-qta').value);
+            const prezzo = parseFloat(document.getElementById('nuovo-prezzo').value);
+            
+            if (!desc) {
+                mostraStatus('Inserisci una descrizione', 'error');
+                return;
+            }
+            
+            if (isNaN(qta) || qta <= 0) {
+                mostraStatus('Inserisci una quantità valida', 'error');
+                return;
+            }
+            
+            if (isNaN(prezzo) || prezzo <= 0) {
+                mostraStatus('Inserisci un prezzo valido', 'error');
+                return;
+            }
+            
+            articoli.push({
+                desc: desc,
+                qta: qta,
+                prezzo: prezzo
+            });
+            
+            document.getElementById('nuovo-articolo').value = '';
+            document.getElementById('nuovo-qta').value = '1';
+            document.getElementById('nuovo-prezzo').value = '10.00';
+            
+            aggiornaLista();
+            mostraStatus('Articolo aggiunto', 'success');
+        }
+        
+        function modificaArticolo(index, campo, valore) {
+            if (campo === 'qta') {
+                valore = parseInt(valore);
+                if (isNaN(valore) || valore <= 0) valore = 1;
+            }
+            if (campo === 'prezzo') {
+                valore = parseFloat(valore);
+                if (isNaN(valore) || valore <= 0) valore = 0;
+            }
+            articoli[index][campo] = valore;
+            aggiornaLista();
+        }
+        
+        function rimuoviArticolo(index) {
+            articoli.splice(index, 1);
+            aggiornaLista();
+            mostraStatus('Articolo rimosso', 'success');
+        }
+        
+        function svuotaScontrino() {
+            articoli = [];
+            aggiornaLista();
+            mostraStatus('Scontrino svuotato', 'success');
+        }
+        
+        function aggiungiEsempio() {
+            articoli = [
+                { desc: 'Lavaggio Camicie (3 pezzi)', qta: 1, prezzo: 12.00 },
+                { desc: 'Stiro Pantaloni', qta: 2, prezzo: 5.00 },
+                { desc: 'Lavaggio a Secco Giacca', qta: 1, prezzo: 15.00 },
+                { desc: 'Ammorbidente', qta: 1, prezzo: 2.50 }
+            ];
+            aggiornaLista();
+            mostraStatus('Esempio caricato', 'success');
+        }
+        
+        function stampaScontrino() {
+            if (articoli.length === 0) {
+                mostraStatus('Aggiungi almeno un articolo', 'error');
+                return;
+            }
+            
+            const ticket = document.getElementById('ticket').value;
+            const cliente = document.getElementById('cliente').value;
+            
+            if (!ticket || !cliente) {
+                mostraStatus('Compila tutti i campi', 'error');
+                return;
+            }
+            
+            const dati = {
+                ticket: ticket,
+                cliente: cliente,
+                articoli: articoli
+            };
+            
+            mostraStatus('📤 Invio dati a Delphi...', 'info');
+            
+            if (inviaADelphi(dati)) {
+                mostraStatus('✅ Scontrino inviato alla stampante!', 'success');
+            } else {
+                mostraStatus('⏳ Attesa connessione Delphi...', 'warning');
+            }
+        }
+        
+        function checkBridge() {
+            if (window.DelphiBridge && !isBridgeReady) {
+                isBridgeReady = true;
+                mostraStatus('✅ Connesso a Delphi - Pronto per la stampa', 'success');
+                const btnStampa = document.getElementById('btnStampa');
+                if (btnStampa) btnStampa.disabled = false;
+                if (checkInterval) {
+                    clearInterval(checkInterval);
+                    checkInterval = null;
+                }
+                // Notifica Delphi
+                try {
+                    window.DelphiBridge.pronto();
+                } catch(e) {}
+                return true;
+            }
+            return false;
+        }
+        
+        // Inizializzazione
+        (function() {
+            const btnStampa = document.getElementById('btnStampa');
+            if (btnStampa) btnStampa.disabled = true;
+            
+            mostraStatus('⏳ Connessione a Delphi in corso...', 'info');
+            
+            // Controlla ogni secondo se il bridge è disponibile
+            if (checkInterval === null) {
+                checkInterval = setInterval(checkBridge, 1000);
+            }
+            
+            // Ferma il check dopo 30 secondi
+            setTimeout(() => {
+                if (checkInterval && !isBridgeReady) {
+                    clearInterval(checkInterval);
+                    checkInterval = null;
+                    mostraStatus('⚠️ Connessione Delphi non disponibile. Verificare che l\'app sia avviata.', 'warning');
+                }
+            }, 30000);
+        })();
     </script>
-  </body>
+</body>
 </html>
