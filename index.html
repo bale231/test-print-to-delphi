@@ -132,6 +132,12 @@
             transform: translateY(-2px);
         }
 
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
         .btn-secondario {
             background: #6c757d;
         }
@@ -168,6 +174,11 @@
         .status.info {
             background: #d1ecf1;
             color: #0c5460;
+        }
+
+        .status.warning {
+            background: #fff3cd;
+            color: #856404;
         }
 
         @media (max-width: 768px) {
@@ -223,7 +234,7 @@
             </div>
             
             <div style="margin-top: 20px;">
-                <button onclick="stampaScontrino()">🖨️ Stampa Scontrino</button>
+                <button id="btnStampa" onclick="stampaScontrino()">🖨️ Stampa Scontrino</button>
                 <button onclick="svuotaScontrino()" class="btn-secondario">🗑️ Svuota</button>
                 <button onclick="aggiungiEsempio()" class="btn-secondario">📝 Esempio</button>
             </div>
@@ -234,6 +245,7 @@
 
     <script>
         let articoli = [];
+        let isWebView2Ready = false;
 
         // Funzione per inviare i dati a Delphi
         function inviaADelphi(dati) {
@@ -247,12 +259,40 @@
                     return false;
                 }
             }
-            // Fallback per test - MAI mostrare modale in produzione
+            // Fallback: prova con window.external (alternativa)
+            else if (window.external && window.external.postMessage) {
+                try {
+                    window.external.postMessage(JSON.stringify(dati));
+                    return true;
+                } catch (e) {
+                    console.error('Errore invio a external:', e);
+                    return false;
+                }
+            }
             else {
-                console.error('WebView2 non rilevato!');
-                console.log('Dati che sarebbero stati inviati:', dati);
+                console.warn('Nessun metodo di comunicazione disponibile');
                 return false;
             }
+        }
+
+        // Funzione per verificare periodicamente se WebView2 è disponibile
+        function checkWebView2Availability() {
+            if (window.chrome && window.chrome.webview) {
+                if (!isWebView2Ready) {
+                    isWebView2Ready = true;
+                    mostraStatus('✅ Connesso a Delphi - Pronto per la stampa', 'success');
+                    document.getElementById('btnStampa').disabled = false;
+                    
+                    // Notifica Delphi che siamo pronti
+                    try {
+                        window.chrome.webview.postMessage(JSON.stringify({ event: 'ready', url: window.location.href }));
+                    } catch(e) {
+                        console.log('Ready event non inviato');
+                    }
+                }
+                return true;
+            }
+            return false;
         }
 
         function aggiornaLista() {
@@ -369,8 +409,10 @@
             statusDiv.textContent = msg;
             statusDiv.className = `status ${tipo}`;
             setTimeout(() => {
-                statusDiv.className = 'status';
-            }, 3000);
+                if (statusDiv.className === `status ${tipo}`) {
+                    statusDiv.className = 'status';
+                }
+            }, 5000);
         }
         
         function stampaScontrino() {
@@ -395,32 +437,66 @@
             
             mostraStatus('📤 Invio dati a Delphi...', 'info');
             
+            // Verifica se WebView2 è disponibile prima di inviare
+            if (!checkWebView2Availability()) {
+                mostraStatus('⏳ Attesa connessione con Delphi... Riprova tra qualche secondo', 'warning');
+                // Prova di nuovo dopo 2 secondi
+                setTimeout(() => {
+                    if (checkWebView2Availability()) {
+                        const inviato = inviaADelphi(dati);
+                        if (inviato) {
+                            mostraStatus('✅ Scontrino inviato alla stampante!', 'success');
+                        } else {
+                            mostraStatus('❌ Errore durante l\'invio a Delphi', 'error');
+                        }
+                    } else {
+                        mostraStatus('❌ Connessione con Delphi non disponibile. Verificare che l\'app sia avviata.', 'error');
+                    }
+                }, 2000);
+                return;
+            }
+            
             // Invia i dati a Delphi
             const inviato = inviaADelphi(dati);
             
             if (inviato) {
                 mostraStatus('✅ Scontrino inviato alla stampante!', 'success');
-                // Opzionale: svuota lo scontrino dopo la stampa
-                // setTimeout(() => svuotaScontrino(), 2000);
             } else {
-                mostraStatus('❌ Errore: WebView2 non rilevato. Contattare assistenza.', 'error');
+                mostraStatus('❌ Errore durante l\'invio a Delphi', 'error');
             }
         }
         
+        // Verifica la disponibilità di WebView2 ogni secondo
+        let checkInterval = setInterval(() => {
+            if (checkWebView2Availability()) {
+                clearInterval(checkInterval);
+            }
+        }, 1000);
+        
         // Rileva se siamo in WebView2 all'avvio
         window.addEventListener('DOMContentLoaded', () => {
-            if (window.chrome && window.chrome.webview) {
-                mostraStatus('✅ Connesso a Delphi - Pronto per la stampa', 'success');
-                // Notifica Delphi che il frontend è pronto
-                try {
-                    window.chrome.webview.postMessage(JSON.stringify({ event: 'ready' }));
-                } catch(e) {
-                    console.log('Ready event non inviato');
-                }
+            // Disabilita il pulsante inizialmente
+            document.getElementById('btnStampa').disabled = true;
+            
+            // Prova immediata
+            if (checkWebView2Availability()) {
+                clearInterval(checkInterval);
             } else {
-                mostraStatus('⚠️ ERRORE: Applicazione non avviata da Delphi. Contattare assistenza.', 'error');
-                // Disabilita il pulsante di stampa se non siamo in WebView2
-                document.querySelector('button[onclick="stampaScontrino()"]').disabled = true;
+                mostraStatus('⏳ Connessione a Delphi in corso...', 'info');
+            }
+        });
+        
+        // Aggiungi listener per messaggi da Delphi (opzionale)
+        window.addEventListener('message', function(event) {
+            if (event.data && typeof event.data === 'string') {
+                try {
+                    const data = JSON.parse(event.data);
+                    if (data.status) {
+                        mostraStatus(data.status, data.type || 'info');
+                    }
+                } catch(e) {
+                    console.log('Messaggio da Delphi:', event.data);
+                }
             }
         });
     </script>
