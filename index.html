@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POS Lavanderia 3logiS</title>
+    <style>
+        /* ... stesso CSS di prima ... */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .content {
+            padding: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        .articoli {
+            margin: 20px 0;
+        }
+        .articolo-item {
+            background: #f8f9fa;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            margin-right: 10px;
+        }
+        .totale {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            text-align: right;
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+        .status {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .status.success { background: #d4edda; color: #155724; }
+        .status.error { background: #f8d7da; color: #721c24; }
+        .status.info { background: #d1ecf1; color: #0c5460; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏪 POS Lavanderia 3logiS</h1>
+            <p>Sistema di Punto Vendita per Lavanderie</p>
+        </div>
+        
+        <div class="content">
+            <div class="form-group">
+                <label>📋 Numero Ticket</label>
+                <input type="text" id="ticket" placeholder="es: 2024-001" value="LAV-001">
+            </div>
+            
+            <div class="form-group">
+                <label>👤 Nome Cliente</label>
+                <input type="text" id="cliente" placeholder="Nome e Cognome" value="Mario Rossi">
+            </div>
+            
+            <div class="form-group">
+                <label>➕ Aggiungi Articolo</label>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <input type="text" id="nuovo-articolo" placeholder="Descrizione" style="flex: 2;">
+                    <input type="number" id="nuovo-qta" placeholder="Q.tà" value="1" style="width: 80px;">
+                    <input type="number" id="nuovo-prezzo" placeholder="Prezzo" step="0.01" value="10.00" style="width: 100px;">
+                    <button onclick="aggiungiArticolo()">➕ Aggiungi</button>
+                </div>
+            </div>
+            
+            <div class="articoli">
+                <h3>📦 Articoli in Scontrino</h3>
+                <div id="lista-articoli"></div>
+            </div>
+            
+            <div class="totale">
+                Totale: € <span id="totale">0.00</span>
+            </div>
+            
+            <div>
+                <button onclick="stampaScontrino()">🖨️ Stampa Scontrino</button>
+                <button onclick="svuotaScontrino()">🗑️ Svuota</button>
+                <button onclick="aggiungiEsempio()">📝 Esempio</button>
+            </div>
+            
+            <div id="status" class="status"></div>
+        </div>
+    </div>
+
+    <script>
+        let articoli = [];
+
+        // Funzione per inviare i dati a Delphi
+        function inviaADelphi(dati) {
+            // Rileva se siamo in WebView2
+            if (window.chrome && window.chrome.webview) {
+                window.chrome.webview.postMessage(JSON.stringify(dati));
+                return true;
+            } 
+            // Fallback per test in browser normale
+            else {
+                console.log('Dati da inviare a Delphi:', dati);
+                mostraStatus('⚠️ Modalità demo: stampa non disponibile in browser', 'info');
+                // Mostra anteprima
+                mostraAnteprima(dati);
+                return false;
+            }
+        }
+
+        function mostraAnteprima(dati) {
+            let anteprima = '=== ANTEPRIMA SCONTRINO ===\n';
+            anteprima += `Ticket: ${dati.ticket}\n`;
+            anteprima += `Cliente: ${dati.cliente}\n`;
+            anteprima += '------------------------\n';
+            let totale = 0;
+            dati.articoli.forEach(art => {
+                const subtotale = art.qta * art.prezzo;
+                totale += subtotale;
+                anteprima += `${art.qta}x ${art.desc} = € ${subtotale.toFixed(2)}\n`;
+            });
+            anteprima += '------------------------\n';
+            anteprima += `TOTALE: € ${totale.toFixed(2)}\n`;
+            alert(anteprima);
+        }
+
+        function aggiornaLista() {
+            const listaDiv = document.getElementById('lista-articoli');
+            const totaleSpan = document.getElementById('totale');
+            
+            if (articoli.length === 0) {
+                listaDiv.innerHTML = '<p style="text-align: center; color: #999;">Nessun articolo aggiunto</p>';
+                totaleSpan.innerText = '0.00';
+                return;
+            }
+            
+            let html = '';
+            let totale = 0;
+            
+            articoli.forEach((articolo, index) => {
+                const subtotale = articolo.qta * articolo.prezzo;
+                totale += subtotale;
+                
+                html += `
+                    <div class="articolo-item">
+                        <span style="font-weight: bold;">${index + 1}.</span>
+                        <input type="text" value="${articolo.desc}" onchange="modificaArticolo(${index}, 'desc', this.value)" style="flex: 2;">
+                        <input type="number" value="${articolo.qta}" onchange="modificaArticolo(${index}, 'qta', parseInt(this.value))" style="width: 80px;">
+                        <input type="number" value="${articolo.prezzo}" step="0.01" onchange="modificaArticolo(${index}, 'prezzo', parseFloat(this.value))" style="width: 100px;">
+                        <span>€ ${subtotale.toFixed(2)}</span>
+                        <button onclick="rimuoviArticolo(${index})" style="background: #dc3545; padding: 5px 10px;">✖</button>
+                    </div>
+                `;
+            });
+            
+            listaDiv.innerHTML = html;
+            totaleSpan.innerText = totale.toFixed(2);
+        }
+        
+        function aggiungiArticolo() {
+            const desc = document.getElementById('nuovo-articolo').value;
+            const qta = parseInt(document.getElementById('nuovo-qta').value);
+            const prezzo = parseFloat(document.getElementById('nuovo-prezzo').value);
+            
+            if (!desc) {
+                mostraStatus('Inserisci una descrizione', 'error');
+                return;
+            }
+            
+            articoli.push({ desc, qta, prezzo });
+            
+            document.getElementById('nuovo-articolo').value = '';
+            document.getElementById('nuovo-qta').value = '1';
+            document.getElementById('nuovo-prezzo').value = '10.00';
+            
+            aggiornaLista();
+            mostraStatus('Articolo aggiunto', 'success');
+        }
+        
+        function modificaArticolo(index, campo, valore) {
+            articoli[index][campo] = valore;
+            aggiornaLista();
+        }
+        
+        function rimuoviArticolo(index) {
+            articoli.splice(index, 1);
+            aggiornaLista();
+            mostraStatus('Articolo rimosso', 'success');
+        }
+        
+        function svuotaScontrino() {
+            articoli = [];
+            aggiornaLista();
+            mostraStatus('Scontrino svuotato', 'success');
+        }
+        
+        function aggiungiEsempio() {
+            articoli = [
+                { desc: 'Lavaggio Camicie', qta: 2, prezzo: 8.50 },
+                { desc: 'Stiro Pantaloni', qta: 1, prezzo: 5.00 },
+                { desc: 'Lavaggio a Secco', qta: 1, prezzo: 15.00 }
+            ];
+            aggiornaLista();
+            mostraStatus('Esempio caricato', 'success');
+        }
+        
+        function mostraStatus(msg, tipo) {
+            const statusDiv = document.getElementById('status');
+            statusDiv.textContent = msg;
+            statusDiv.className = `status ${tipo}`;
+            setTimeout(() => {
+                statusDiv.className = 'status';
+            }, 3000);
+        }
+        
+        function stampaScontrino() {
+            if (articoli.length === 0) {
+                mostraStatus('Aggiungi almeno un articolo', 'error');
+                return;
+            }
+            
+            const ticket = document.getElementById('ticket').value;
+            const cliente = document.getElementById('cliente').value;
+            
+            const dati = {
+                ticket: ticket,
+                cliente: cliente,
+                articoli: articoli
+            };
+            
+            mostraStatus('Invio dati a Delphi...', 'success');
+            inviaADelphi(dati);
+        }
+        
+        // Rilevazione ambiente all'avvio
+        window.addEventListener('DOMContentLoaded', () => {
+            if (window.chrome && window.chrome.webview) {
+                mostraStatus('✅ Connesso a Delphi - Pronto per la stampa', 'success');
+            } else {
+                mostraStatus('🌐 Modalità web - Demo interattiva', 'info');
+            }
+        });
+    </script>
+</body>
+</html>
